@@ -6,9 +6,15 @@
     <title>Dashboard - DealHawk</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         .glass { backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.8); }
+        .deal-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
+        .alert-card { animation: slideIn 0.4s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        .price-trend-up { color: #ef4444; }
+        .price-trend-down { color: #10b981; }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -20,17 +26,65 @@
                 <div class="flex items-center space-x-8">
                     <h1 class="text-xl font-semibold text-gray-900">DealHawk</h1>
                     <div class="hidden md:flex items-center space-x-6">
-                        <a href="demo.html" class="text-gray-600 hover:text-gray-900">Search</a>
+                        <a href="demo.html" class="text-gray-600 hover:text-gray-900 transition-colors">Search</a>
                         <a href="demo-dashboard.html" class="text-blue-600 font-medium">Dashboard</a>
-                        <a href="demo-admin.html" class="text-gray-600 hover:text-gray-900">Admin</a>
+                        <a href="demo-admin.html" class="text-gray-600 hover:text-gray-900 transition-colors">Admin</a>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
                     <a href="demo.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                         <i class="fas fa-search mr-2"></i>New Search
                     </a>
-                    <a href="demo-login.html" class="text-gray-600 hover:text-gray-900">
-                        <i class="fas fa-user"></i>
+                    <div class="relative">
+                        <button class="p-2 text-gray-600 hover:text-gray-900 transition-colors" onclick="toggleNotifications()">
+                            <i class="fas fa-bell"></i>
+                            <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full pulse"></span>
+                        </button>
+                        <!-- Notification Dropdown -->
+                        <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-200 z-50">
+                            <div class="p-4 border-b border-gray-200">
+                                <h3 class="font-semibold text-gray-900">Recent Alerts</h3>
+                            </div>
+                            <div class="max-h-64 overflow-y-auto">
+                                <div class="p-3 hover:bg-gray-50 border-b border-gray-100">
+                                    <div class="flex items-start space-x-3">
+                                        <div class="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-medium text-gray-900">Price Drop Alert!</p>
+                                            <p class="text-xs text-gray-600">iPhone 15 Pro dropped to ₹78,999 (-₹5,901)</p>
+                                            <p class="text-xs text-gray-500 mt-1">2 hours ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-3 hover:bg-gray-50 border-b border-gray-100">
+                                    <div class="flex items-start space-x-3">
+                                        <div class="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-medium text-gray-900">New Deal Found</p>
+                                            <p class="text-xs text-gray-600">MacBook Air M2 - 22% off on Flipkart</p>
+                                            <p class="text-xs text-gray-500 mt-1">4 hours ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-3 hover:bg-gray-50">
+                                    <div class="flex items-start space-x-3">
+                                        <div class="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-medium text-gray-900">Stock Alert</p>
+                                            <p class="text-xs text-gray-600">Sony WH-1000XM5 back in stock</p>
+                                            <p class="text-xs text-gray-500 mt-1">6 hours ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-3 border-t border-gray-200">
+                                <button class="text-sm text-blue-600 hover:text-blue-700 font-medium">View all alerts</button>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="demo-login.html" class="flex items-center text-gray-600 hover:text-gray-900 transition-colors">
+                        <img class="h-8 w-8 rounded-full mr-2" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face" alt="User">
+                        <span class="text-sm">John</span>
                     </a>
                 </div>
             </div>
@@ -40,116 +94,381 @@
     <!-- Main Content -->
     <div class="max-w-6xl mx-auto px-6 py-8">
         
-        <!-- Header -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-2">Your Dashboard</h2>
-            <p class="text-gray-600">Track your saved searches and alerts</p>
-        </div>
-
-        <!-- Active Alerts -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold text-gray-900">Active Alerts</h3>
-                <a href="demo.html" class="text-blue-600 hover:text-blue-700 font-medium">
-                    <i class="fas fa-plus mr-1"></i>Create Alert
+        <!-- Header with Quick Actions -->
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Welcome back, John!</h2>
+                <p class="text-gray-600">You have 3 new price drops and 2 deal alerts waiting</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="refreshData()" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+                    <i class="fas fa-sync mr-2"></i>Refresh
+                </button>
+                <a href="demo.html" class="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>New Alert
                 </a>
-            </div>
-            
-            <div class="space-y-4">
-                <div class="flex items-center justify-between p-4 bg-blue-50 rounded-xl border border-blue-200">
-                    <div class="flex items-center">
-                        <i class="fas fa-bell text-blue-600 mr-3"></i>
-                        <div>
-                            <div class="font-medium text-gray-900">iPhone 15 Pro under ₹80,000</div>
-                            <div class="text-sm text-gray-600">Active • Last triggered 2 hours ago</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded-lg text-sm font-medium">3 new</span>
-                        <button class="text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-ellipsis-h"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-                    <div class="flex items-center">
-                        <i class="fas fa-bell text-gray-400 mr-3"></i>
-                        <div>
-                            <div class="font-medium text-gray-900">MacBook Air M2 deals</div>
-                            <div class="text-sm text-gray-600">Active • Last triggered yesterday</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded-lg text-sm">No new deals</span>
-                        <button class="text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-ellipsis-h"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recent Deals -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
-            <h3 class="text-lg font-semibold text-gray-900 mb-6">Recent Deals</h3>
-            
-            <div class="grid gap-4">
-                <div class="flex items-center space-x-4 p-4 hover:bg-gray-50 rounded-xl transition-colors">
-                    <img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=80&h=80&fit=crop" 
-                         alt="iPhone" class="w-16 h-16 rounded-lg object-cover">
-                    <div class="flex-1">
-                        <div class="font-medium text-gray-900">iPhone 15 Pro 128GB</div>
-                        <div class="text-sm text-gray-600">Brand new, unlocked</div>
-                        <div class="flex items-center space-x-2 mt-1">
-                            <span class="text-lg font-bold text-green-600">₹78,999</span>
-                            <span class="text-sm text-gray-500 line-through">₹134,900</span>
-                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm font-medium">41% off</span>
-                        </div>
-                    </div>
-                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                        View Deal
-                    </button>
-                </div>
-
-                <div class="flex items-center space-x-4 p-4 hover:bg-gray-50 rounded-xl transition-colors">
-                    <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=80&h=80&fit=crop" 
-                         alt="MacBook" class="w-16 h-16 rounded-lg object-cover">
-                    <div class="flex-1">
-                        <div class="font-medium text-gray-900">MacBook Air M2 256GB</div>
-                        <div class="text-sm text-gray-600">Space Gray, excellent condition</div>
-                        <div class="flex items-center space-x-2 mt-1">
-                            <span class="text-lg font-bold text-green-600">₹89,500</span>
-                            <span class="text-sm text-gray-500 line-through">₹114,900</span>
-                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm font-medium">22% off</span>
-                        </div>
-                    </div>
-                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                        View Deal
-                    </button>
-                </div>
             </div>
         </div>
 
         <!-- Quick Stats -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div class="bg-white rounded-xl p-6 text-center border border-gray-200">
                 <div class="text-2xl font-bold text-blue-600 mb-1">12</div>
                 <div class="text-sm text-gray-600">Active Alerts</div>
+                <div class="text-xs text-green-600 mt-1">+2 this week</div>
             </div>
             <div class="bg-white rounded-xl p-6 text-center border border-gray-200">
                 <div class="text-2xl font-bold text-green-600 mb-1">₹45K</div>
                 <div class="text-sm text-gray-600">Total Saved</div>
+                <div class="text-xs text-green-600 mt-1">+₹5.9K today</div>
             </div>
             <div class="bg-white rounded-xl p-6 text-center border border-gray-200">
                 <div class="text-2xl font-bold text-purple-600 mb-1">89</div>
                 <div class="text-sm text-gray-600">Deals Found</div>
+                <div class="text-xs text-purple-600 mt-1">+12 today</div>
             </div>
             <div class="bg-white rounded-xl p-6 text-center border border-gray-200">
                 <div class="text-2xl font-bold text-orange-600 mb-1">24</div>
                 <div class="text-sm text-gray-600">Days Active</div>
+                <div class="text-xs text-gray-600 mt-1">Since March 1</div>
+            </div>
+        </div>
+
+        <!-- Active Alerts with Status -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-gray-900">Active Price Alerts</h3>
+                <div class="flex items-center space-x-2">
+                    <button onclick="pauseAllAlerts()" class="text-sm text-gray-600 hover:text-gray-900">Pause All</button>
+                    <span class="text-gray-300">•</span>
+                    <a href="demo.html" class="text-sm text-blue-600 hover:text-blue-700 font-medium">Create New</a>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="alert-card flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-xl border border-green-200">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-mobile-alt text-white"></i>
+                        </div>
+                        <div>
+                            <div class="font-medium text-gray-900">iPhone 15 Pro under ₹80,000</div>
+                            <div class="text-sm text-gray-600 flex items-center">
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium mr-2">TRIGGERED</span>
+                                Current: ₹78,999 • Target: ₹80,000
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">
+                                <i class="fas fa-chart-line price-trend-down mr-1"></i>
+                                Dropped ₹5,901 (7%) in last 2 hours
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <button onclick="viewAlert('iphone-alert')" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm">
+                            View Deals
+                        </button>
+                        <button onclick="editAlert('iphone-alert')" class="text-gray-400 hover:text-gray-600 transition-colors">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="alert-card flex items-center justify-between p-4 bg-blue-50 rounded-xl border border-blue-200">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-laptop text-white"></i>
+                        </div>
+                        <div>
+                            <div class="font-medium text-gray-900">MacBook Air M2 deals</div>
+                            <div class="text-sm text-gray-600 flex items-center">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium mr-2">ACTIVE</span>
+                                Current: ₹89,500 • Target: ₹85,000
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">
+                                <i class="fas fa-chart-line text-gray-400 mr-1"></i>
+                                Price stable • Last check: 5 min ago
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span class="text-sm text-gray-600">₹4,500 to go</span>
+                        <button onclick="editAlert('macbook-alert')" class="text-gray-400 hover:text-gray-600 transition-colors">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="alert-card flex items-center justify-between p-4 bg-yellow-50 rounded-xl border border-yellow-200">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-headphones text-white"></i>
+                        </div>
+                        <div>
+                            <div class="font-medium text-gray-900">Sony WH-1000XM5 under ₹20,000</div>
+                            <div class="text-sm text-gray-600 flex items-center">
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium mr-2">WATCHING</span>
+                                Current: ₹24,990 • Target: ₹20,000
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">
+                                <i class="fas fa-chart-line price-trend-up mr-1"></i>
+                                Price increased ₹1,000 (4%) since yesterday
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span class="text-sm text-gray-600">₹4,990 to go</span>
+                        <button onclick="editAlert('sony-alert')" class="text-gray-400 hover:text-gray-600 transition-colors">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Deal Discoveries -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-gray-900">Recent Deal Discoveries</h3>
+                <button onclick="viewAllDeals()" class="text-sm text-blue-600 hover:text-blue-700 font-medium">View All</button>
+            </div>
+            
+            <div class="grid gap-4">
+                <div class="deal-card flex items-center space-x-4 p-4 hover:bg-gray-50 rounded-xl transition-all cursor-pointer" onclick="viewDeal('deal-1')">
+                    <img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=80&h=80&fit=crop" 
+                         alt="iPhone" class="w-16 h-16 rounded-lg object-cover">
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-1">
+                            <div class="font-medium text-gray-900">iPhone 15 Pro 128GB Natural Titanium</div>
+                            <div class="text-xs text-gray-500">2 hours ago</div>
+                        </div>
+                        <div class="text-sm text-gray-600 mb-2">Apple Store Official • Amazon</div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-lg font-bold text-green-600">₹78,999</span>
+                            <span class="text-sm text-gray-500 line-through">₹134,900</span>
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">42% off</span>
+                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">PRICE DROP</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="createAlert(event, 'iPhone 15 Pro')" class="text-blue-600 hover:text-blue-700 text-sm">
+                            <i class="fas fa-bell mr-1"></i>Alert
+                        </button>
+                        <button onclick="saveForLater(event, 'deal-1')" class="text-gray-600 hover:text-gray-700">
+                            <i class="fas fa-bookmark"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="deal-card flex items-center space-x-4 p-4 hover:bg-gray-50 rounded-xl transition-all cursor-pointer" onclick="viewDeal('deal-2')">
+                    <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=80&h=80&fit=crop" 
+                         alt="Headphones" class="w-16 h-16 rounded-lg object-cover">
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-1">
+                            <div class="font-medium text-gray-900">Sony WH-1000XM5 Noise Canceling</div>
+                            <div class="text-xs text-gray-500">4 hours ago</div>
+                        </div>
+                        <div class="text-sm text-gray-600 mb-2">Sony Official Store • Amazon</div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-lg font-bold text-green-600">₹19,999</span>
+                            <span class="text-sm text-gray-500 line-through">₹34,990</span>
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">43% off</span>
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">FLASH SALE</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="createAlert(event, 'Sony WH-1000XM5')" class="text-blue-600 hover:text-blue-700 text-sm">
+                            <i class="fas fa-bell mr-1"></i>Alert
+                        </button>
+                        <button onclick="saveForLater(event, 'deal-2')" class="text-gray-600 hover:text-gray-700">
+                            <i class="fas fa-bookmark"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="deal-card flex items-center space-x-4 p-4 hover:bg-gray-50 rounded-xl transition-all cursor-pointer" onclick="viewDeal('deal-3')">
+                    <img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=80&h=80&fit=crop" 
+                         alt="iPad" class="w-16 h-16 rounded-lg object-cover">
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-1">
+                            <div class="font-medium text-gray-900">iPad Air M2 11-inch Wi-Fi 128GB</div>
+                            <div class="text-xs text-gray-500">6 hours ago</div>
+                        </div>
+                        <div class="text-sm text-gray-600 mb-2">RetailNet • Flipkart</div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-lg font-bold text-green-600">₹44,999</span>
+                            <span class="text-sm text-gray-500 line-through">₹59,900</span>
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">25% off</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="createAlert(event, 'iPad Air M2')" class="text-blue-600 hover:text-blue-700 text-sm">
+                            <i class="fas fa-bell mr-1"></i>Alert
+                        </button>
+                        <button onclick="saveForLater(event, 'deal-3')" class="text-gray-600 hover:text-gray-700">
+                            <i class="fas fa-bookmark"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Savings Chart -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-gray-900">Your Savings Over Time</h3>
+                <div class="flex items-center space-x-2 text-sm">
+                    <button onclick="changePeriod('7d')" class="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg">7D</button>
+                    <button onclick="changePeriod('30d')" class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg">30D</button>
+                    <button onclick="changePeriod('90d')" class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg">90D</button>
+                </div>
+            </div>
+            <div class="h-64">
+                <canvas id="savingsChart"></canvas>
             </div>
         </div>
     </div>
+
+    <script>
+        // Chart initialization
+        window.addEventListener('load', function() {
+            const ctx = document.getElementById('savingsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mar 1', 'Mar 8', 'Mar 15', 'Mar 22', 'Mar 29', 'Apr 5', 'Today'],
+                    datasets: [{
+                        label: 'Cumulative Savings (₹)',
+                        data: [0, 5200, 12800, 18500, 28900, 35600, 45200],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#3b82f6',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₹' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    elements: {
+                        point: { hoverRadius: 8 }
+                    }
+                }
+            });
+        });
+
+        // Interactive functions
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notificationDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        function refreshData() {
+            // Simulate data refresh
+            const button = event.target.closest('button');
+            const icon = button.querySelector('i');
+            icon.classList.add('fa-spin');
+            
+            setTimeout(() => {
+                icon.classList.remove('fa-spin');
+                showToast('Data refreshed successfully!', 'success');
+            }, 1500);
+        }
+
+        function viewAlert(alertId) {
+            alert(`Demo: Viewing alert details for ${alertId}\n\nIn a real app, this would show:\n• Alert configuration\n• Price history\n• Recent triggers\n• Edit options`);
+        }
+
+        function editAlert(alertId) {
+            alert(`Demo: Editing alert ${alertId}\n\nIn a real app, you could:\n• Change target price\n• Modify conditions\n• Pause/resume alert\n• Delete alert`);
+        }
+
+        function pauseAllAlerts() {
+            if (confirm('Are you sure you want to pause all alerts?')) {
+                showToast('All alerts paused', 'info');
+            }
+        }
+
+        function viewDeal(dealId) {
+            alert(`Demo: Viewing deal ${dealId}\n\nIn a real app, this would:\n• Show detailed product info\n• Display price history\n• Show seller ratings\n• Provide purchase links`);
+        }
+
+        function createAlert(event, productName) {
+            event.stopPropagation();
+            alert(`Demo: Creating price alert for "${productName}"\n\nIn a real app, you would:\n• Set target price\n• Choose notification method\n• Configure conditions`);
+        }
+
+        function saveForLater(event, dealId) {
+            event.stopPropagation();
+            const button = event.target.closest('button');
+            const icon = button.querySelector('i');
+            
+            if (icon.classList.contains('fas')) {
+                icon.className = 'far fa-bookmark';
+                showToast('Removed from saved deals', 'info');
+            } else {
+                icon.className = 'fas fa-bookmark';
+                showToast('Saved for later', 'success');
+            }
+        }
+
+        function viewAllDeals() {
+            window.location.href = 'demo.html';
+        }
+
+        function changePeriod(period) {
+            // Update chart period
+            document.querySelectorAll('[onclick^="changePeriod"]').forEach(btn => {
+                btn.className = 'px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg';
+            });
+            event.target.className = 'px-3 py-1 bg-blue-100 text-blue-700 rounded-lg';
+            
+            showToast(`Viewing ${period} data`, 'info');
+        }
+
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500'
+            };
+            
+            toast.className = `fixed top-4 right-4 ${colors[type]} text-white px-4 py-2 rounded-lg shadow-lg z-50 transform transition-all duration-300`;
+            toast.textContent = message;
+            toast.style.transform = 'translateX(100%)';
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => { toast.style.transform = 'translateX(0)'; }, 100);
+            setTimeout(() => { toast.style.transform = 'translateX(100%)'; }, 3000);
+            setTimeout(() => { document.body.removeChild(toast); }, 3500);
+        }
+
+        // Close notifications when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('notificationDropdown');
+            const bellButton = event.target.closest('[onclick="toggleNotifications()"]');
+            
+            if (!dropdown.contains(event.target) && !bellButton) {
+                dropdown.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 </html>
