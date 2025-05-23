@@ -3,375 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DealHawk - AI-Powered Marketplace Monitor</title>
+    <title>DealHawk</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        [x-cloak] { display: none !important; }
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .card-hover {
-            transition: all 0.3s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
+        * { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .glass { backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.8); }
+        .fade-in { animation: fadeIn 0.6s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="bg-gray-50">
+
     <!-- Navigation -->
-    <nav class="bg-white shadow-sm border-b">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
-                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
-                        </svg>
+    <nav class="glass border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <h1 class="text-xl font-semibold text-gray-900">DealHawk</h1>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="demo.html" class="text-blue-600 font-medium">Search</a>
+                        <a href="demo-dashboard.html" class="text-gray-600 hover:text-gray-900">Dashboard</a>
+                        <a href="demo-admin.html" class="text-gray-600 hover:text-gray-900">Admin</a>
                     </div>
-                    <span class="text-xl font-bold text-gray-900">DealHawk</span>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <span class="text-sm text-gray-600">demo@dealhawk.ai</span>
-                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
-                        Upgrade to Pro
-                    </button>
-                </div>
+                <a href="demo-login.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    Sign In
+                </a>
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <div x-data="appData()" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="max-w-4xl mx-auto px-6 py-12">
         
-        <!-- Header with Stats -->
-        <div class="gradient-bg -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-8 mb-8 rounded-b-2xl">
-            <h1 class="text-3xl font-bold text-white mb-2">Welcome back, Demo User! 👋</h1>
-            <p class="text-blue-100 mb-6">Here's your AI-powered marketplace monitoring dashboard</p>
-            
-            <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="bg-white/10 backdrop-blur rounded-lg p-4">
-                    <div class="text-2xl font-bold text-white">12</div>
-                    <div class="text-blue-100 text-sm">Active Searches</div>
-                </div>
-                <div class="bg-white/10 backdrop-blur rounded-lg p-4">
-                    <div class="text-2xl font-bold text-white">847</div>
-                    <div class="text-blue-100 text-sm">Items Found</div>
-                </div>
-                <div class="bg-white/10 backdrop-blur rounded-lg p-4">
-                    <div class="text-2xl font-bold text-white">23</div>
-                    <div class="text-blue-100 text-sm">High Relevance</div>
-                </div>
-                <div class="bg-white/10 backdrop-blur rounded-lg p-4">
-                    <div class="text-2xl font-bold text-white">8.4</div>
-                    <div class="text-blue-100 text-sm">Avg AI Score</div>
-                </div>
-            </div>
+        <!-- Hero Section -->
+        <div class="text-center mb-12 fade-in">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Find the best deals</h2>
+            <p class="text-xl text-gray-600 mb-8">AI-powered marketplace monitoring across eBay, Amazon, and more</p>
         </div>
 
-        <!-- Tab Navigation -->
-        <div class="border-b border-gray-200 mb-8">
-            <nav class="flex space-x-8">
-                <button @click="activeTab = 'dashboard'" 
-                        :class="activeTab === 'dashboard' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
-                        class="py-2 px-1 border-b-2 font-medium text-sm">
-                    Dashboard
-                </button>
-                <button @click="activeTab = 'searches'" 
-                        :class="activeTab === 'searches' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
-                        class="py-2 px-1 border-b-2 font-medium text-sm">
-                    My Searches
-                </button>
-                <button @click="activeTab = 'results'" 
-                        :class="activeTab === 'results' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
-                        class="py-2 px-1 border-b-2 font-medium text-sm">
-                    Latest Results
-                </button>
-                <button @click="activeTab = 'notifications'" 
-                        :class="activeTab === 'notifications' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
-                        class="py-2 px-1 border-b-2 font-medium text-sm">
-                    Notifications
-                </button>
-            </nav>
-        </div>
+        <!-- Search Section -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-8 fade-in">
+            <div class="space-y-6">
+                
+                <!-- Main Search Bar -->
+                <div class="relative">
+                    <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" placeholder="What are you looking for?" 
+                           class="w-full pl-12 pr-4 py-4 text-lg bg-gray-50 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
 
-        <!-- Dashboard Tab -->
-        <div x-show="activeTab === 'dashboard'" x-cloak>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Recent High-Relevance Finds -->
-                <div class="bg-white rounded-lg shadow-sm border p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">🔥 High-Relevance Finds</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-                            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff" class="w-12 h-12 rounded object-cover">
-                            <div class="flex-1">
-                                <div class="font-medium text-gray-900">Vintage Nike Air Max 90</div>
-                                <div class="text-sm text-gray-500">AI Score: 9.2/10 • $75 • Depop</div>
+                <!-- Quick Filters -->
+                <div class="flex flex-wrap gap-3">
+                    <button class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
+                        Electronics
+                    </button>
+                    <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                        Fashion
+                    </button>
+                    <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                        Home & Garden
+                    </button>
+                    <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                        Collectibles
+                    </button>
+                </div>
+
+                <!-- Advanced Filters Toggle -->
+                <button onclick="toggleFilters()" class="text-blue-600 hover:text-blue-700 font-medium">
+                    <i class="fas fa-sliders-h mr-2"></i>Advanced Filters
+                </button>
+
+                <!-- Advanced Filters (Hidden by default) -->
+                <div id="advancedFilters" class="hidden border-t pt-6 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Price Range</label>
+                            <div class="flex space-x-2">
+                                <input type="number" placeholder="Min" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg">
+                                <input type="number" placeholder="Max" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg">
                             </div>
-                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">High Match</span>
                         </div>
-                        <div class="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-                            <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea" class="w-12 h-12 rounded object-cover">
-                            <div class="flex-1">
-                                <div class="font-medium text-gray-900">Leather Motorcycle Jacket</div>
-                                <div class="text-sm text-gray-500">AI Score: 8.7/10 • $120 • Facebook</div>
-                            </div>
-                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Good Match</span>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Condition</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                <option>Any</option>
+                                <option>New</option>
+                                <option>Used</option>
+                                <option>Refurbished</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                            <input type="text" placeholder="Any location" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
                         </div>
                     </div>
                 </div>
 
-                <!-- AI Performance -->
-                <div class="bg-white rounded-lg shadow-sm border p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">🤖 AI Performance</h3>
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Average Relevance Score</span>
-                            <span class="font-semibold text-blue-600">8.4/10</span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
-                            <div class="bg-blue-600 h-2 rounded-full" style="width: 84%"></div>
-                        </div>
-                        
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Items Processed Today</span>
-                            <span class="font-semibold text-green-600">156</span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
-                            <div class="bg-green-600 h-2 rounded-full" style="width: 78%"></div>
-                        </div>
-                        
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">False Positives</span>
-                            <span class="font-semibold text-yellow-600">< 5%</span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
-                            <div class="bg-yellow-600 h-2 rounded-full" style="width: 5%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Searches Tab -->
-        <div x-show="activeTab === 'searches'" x-cloak>
-            <div class="mb-6 flex justify-between items-center">
-                <h2 class="text-2xl font-bold text-gray-900">My Searches</h2>
-                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700">
-                    + Create New Search
+                <!-- Search Button -->
+                <button onclick="performSearch()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold hover:bg-blue-700 transition-colors">
+                    Search Deals
                 </button>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Search Card 1 -->
-                <div class="bg-white rounded-lg shadow-sm border p-6 card-hover">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-semibold text-gray-900">Vintage Nike Sneakers</h3>
-                        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Active</span>
-                    </div>
-                    <div class="space-y-2 text-sm text-gray-600 mb-4">
-                        <div>Keywords: nike, vintage, sneakers</div>
-                        <div>Marketplaces: Depop, eBay</div>
-                        <div>Price: $50 - $200</div>
-                        <div>Last run: 2 hours ago</div>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm font-medium text-blue-600">23 new results</span>
-                        <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">View Results</button>
-                    </div>
-                </div>
+        </div>
 
-                <!-- Search Card 2 -->
-                <div class="bg-white rounded-lg shadow-sm border p-6 card-hover">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-semibold text-gray-900">Leather Jackets</h3>
-                        <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">Paused</span>
+        <!-- Recent Searches -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8 fade-in">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Searches</h3>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                    <div class="flex items-center">
+                        <i class="fas fa-history text-gray-400 mr-3"></i>
+                        <span class="text-gray-700">iPhone 15 Pro</span>
                     </div>
-                    <div class="space-y-2 text-sm text-gray-600 mb-4">
-                        <div>Keywords: leather, jacket, vintage</div>
-                        <div>Marketplaces: Depop, Facebook</div>
-                        <div>Price: $80 - $300</div>
-                        <div>Last run: 1 day ago</div>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm font-medium text-gray-600">12 results</span>
-                        <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Resume</button>
-                    </div>
+                    <span class="text-sm text-gray-500">23 results</span>
                 </div>
-
-                <!-- Search Card 3 -->
-                <div class="bg-white rounded-lg shadow-sm border p-6 card-hover">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-semibold text-gray-900">Mechanical Keyboards</h3>
-                        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Active</span>
+                <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                    <div class="flex items-center">
+                        <i class="fas fa-history text-gray-400 mr-3"></i>
+                        <span class="text-gray-700">MacBook Air M2</span>
                     </div>
-                    <div class="space-y-2 text-sm text-gray-600 mb-4">
-                        <div>Keywords: mechanical, keyboard, cherry</div>
-                        <div>Marketplaces: eBay, Facebook</div>
-                        <div>Price: $100 - $400</div>
-                        <div>Last run: 30 minutes ago</div>
+                    <span class="text-sm text-gray-500">18 results</span>
+                </div>
+                <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                    <div class="flex items-center">
+                        <i class="fas fa-history text-gray-400 mr-3"></i>
+                        <span class="text-gray-700">Nike Air Jordan</span>
                     </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm font-medium text-blue-600">8 new results</span>
-                        <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">View Results</button>
-                    </div>
+                    <span class="text-sm text-gray-500">45 results</span>
                 </div>
             </div>
         </div>
 
-        <!-- Results Tab -->
-        <div x-show="activeTab === 'results'" x-cloak>
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold text-gray-900 mb-4">Latest Results</h2>
-                <div class="flex space-x-4 mb-4">
-                    <select class="border border-gray-300 rounded-md px-3 py-2 text-sm">
-                        <option>All Marketplaces</option>
-                        <option>Depop</option>
-                        <option>eBay</option>
-                        <option>Facebook</option>
-                    </select>
-                    <select class="border border-gray-300 rounded-md px-3 py-2 text-sm">
-                        <option>All Searches</option>
-                        <option>Vintage Nike Sneakers</option>
-                        <option>Leather Jackets</option>
-                    </select>
-                </div>
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 fade-in">
+            <div class="bg-white rounded-xl p-6 text-center border border-gray-200">
+                <div class="text-2xl font-bold text-blue-600 mb-1">2.4M</div>
+                <div class="text-sm text-gray-600">Products Tracked</div>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Result Card 1 -->
-                <div class="bg-white rounded-lg shadow-sm border overflow-hidden card-hover">
-                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff" class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">AI Score: 9.2</span>
-                            <span class="text-blue-600 text-sm font-medium">Depop</span>
-                        </div>
-                        <h3 class="font-semibold text-gray-900 mb-1">Vintage Nike Air Max 90 - White/Blue</h3>
-                        <p class="text-gray-600 text-sm mb-2">Excellent condition, size 10, minimal wear</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-xl font-bold text-gray-900">$75</span>
-                            <button class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">View Item</button>
-                        </div>
-                        <div class="mt-3 text-xs text-gray-500">
-                            AI Reasoning: Perfect keyword match, fair pricing, good seller rating
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Result Card 2 -->
-                <div class="bg-white rounded-lg shadow-sm border overflow-hidden card-hover">
-                    <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea" class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">AI Score: 8.7</span>
-                            <span class="text-purple-600 text-sm font-medium">Facebook</span>
-                        </div>
-                        <h3 class="font-semibold text-gray-900 mb-1">Vintage Leather Motorcycle Jacket</h3>
-                        <p class="text-gray-600 text-sm mb-2">Size Large, genuine leather, minor scuffs</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-xl font-bold text-gray-900">$120</span>
-                            <button class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">View Item</button>
-                        </div>
-                        <div class="mt-3 text-xs text-gray-500">
-                            AI Reasoning: Strong match for vintage leather, below market price
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Result Card 3 -->
-                <div class="bg-white rounded-lg shadow-sm border overflow-hidden card-hover">
-                    <img src="https://images.unsplash.com/photo-1626197031507-c17099753214" class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">AI Score: 7.8</span>
-                            <span class="text-yellow-600 text-sm font-medium">eBay</span>
-                        </div>
-                        <h3 class="font-semibold text-gray-900 mb-1">Mechanical Keyboard - Cherry MX Blue</h3>
-                        <p class="text-gray-600 text-sm mb-2">Gaming keyboard, RGB backlight, lightly used</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-xl font-bold text-gray-900">$150</span>
-                            <button class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">View Item</button>
-                        </div>
-                        <div class="mt-3 text-xs text-gray-500">
-                            AI Reasoning: Good keyword match, condition acceptable
-                        </div>
-                    </div>
-                </div>
+            <div class="bg-white rounded-xl p-6 text-center border border-gray-200">
+                <div class="text-2xl font-bold text-green-600 mb-1">₹89K</div>
+                <div class="text-sm text-gray-600">Avg Savings</div>
             </div>
-        </div>
-
-        <!-- Notifications Tab -->
-        <div x-show="activeTab === 'notifications'" x-cloak>
-            <div class="mb-6 flex justify-between items-center">
-                <h2 class="text-2xl font-bold text-gray-900">Notifications</h2>
-                <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Mark all as read</button>
+            <div class="bg-white rounded-xl p-6 text-center border border-gray-200">
+                <div class="text-2xl font-bold text-purple-600 mb-1">156</div>
+                <div class="text-sm text-gray-600">New Deals Today</div>
             </div>
-            
-            <div class="bg-white rounded-lg shadow-sm border">
-                <!-- Notification 1 -->
-                <div class="p-4 border-b border-gray-200 bg-blue-50">
-                    <div class="flex items-start space-x-3">
-                        <div class="bg-blue-600 rounded-full p-1">
-                            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <div class="font-medium text-gray-900">New high-relevance item found!</div>
-                            <div class="text-gray-600 text-sm">Vintage Nike Air Max 90 - AI Score: 9.2/10</div>
-                            <div class="text-gray-500 text-xs mt-1">2 hours ago</div>
-                        </div>
-                        <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">View</button>
-                    </div>
-                </div>
-
-                <!-- Notification 2 -->
-                <div class="p-4 border-b border-gray-200">
-                    <div class="flex items-start space-x-3">
-                        <div class="bg-green-600 rounded-full p-1">
-                            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <div class="font-medium text-gray-900">Price drop detected</div>
-                            <div class="text-gray-600 text-sm">Leather Jacket dropped from $150 to $120</div>
-                            <div class="text-gray-500 text-xs mt-1">5 hours ago</div>
-                        </div>
-                        <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">View</button>
-                    </div>
-                </div>
-
-                <!-- Notification 3 -->
-                <div class="p-4">
-                    <div class="flex items-start space-x-3">
-                        <div class="bg-gray-400 rounded-full p-1">
-                            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <div class="font-medium text-gray-900">Search completed</div>
-                            <div class="text-gray-600 text-sm">Mechanical Keyboards search found 8 new items</div>
-                            <div class="text-gray-500 text-xs mt-1">1 day ago</div>
-                        </div>
-                        <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">View</button>
-                    </div>
-                </div>
+            <div class="bg-white rounded-xl p-6 text-center border border-gray-200">
+                <div class="text-2xl font-bold text-orange-600 mb-1">24/7</div>
+                <div class="text-sm text-gray-600">Monitoring</div>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript for Interactivity -->
     <script>
-        function appData() {
-            return {
-                activeTab: 'dashboard'
+        function toggleFilters() {
+            const filters = document.getElementById('advancedFilters');
+            filters.classList.toggle('hidden');
+        }
+
+        function performSearch() {
+            const searchTerm = document.querySelector('input[type="text"]').value;
+            if (searchTerm.trim()) {
+                alert(`Demo: Searching for "${searchTerm}"\n\nIn a real app, this would:\n• Search across multiple marketplaces\n• Apply AI-powered filtering\n• Show real-time results\n• Set up price alerts`);
+            } else {
+                alert('Please enter a search term');
             }
         }
     </script>

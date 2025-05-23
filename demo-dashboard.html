@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - DealHawk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .glass { backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.8); }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Navigation -->
+    <nav class="glass border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <h1 class="text-xl font-semibold text-gray-900">DealHawk</h1>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="demo.html" class="text-gray-600 hover:text-gray-900">Search</a>
+                        <a href="demo-dashboard.html" class="text-blue-600 font-medium">Dashboard</a>
+                        <a href="demo-admin.html" class="text-gray-600 hover:text-gray-900">Admin</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="demo.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-search mr-2"></i>New Search
+                    </a>
+                    <a href="demo-login.html" class="text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-user"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto px-6 py-8">
+        
+        <!-- Header -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">Your Dashboard</h2>
+            <p class="text-gray-600">Track your saved searches and alerts</p>
+        </div>
+
+        <!-- Active Alerts -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-gray-900">Active Alerts</h3>
+                <a href="demo.html" class="text-blue-600 hover:text-blue-700 font-medium">
+                    <i class="fas fa-plus mr-1"></i>Create Alert
+                </a>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="flex items-center justify-between p-4 bg-blue-50 rounded-xl border border-blue-200">
+                    <div class="flex items-center">
+                        <i class="fas fa-bell text-blue-600 mr-3"></i>
+                        <div>
+                            <div class="font-medium text-gray-900">iPhone 15 Pro under ₹80,000</div>
+                            <div class="text-sm text-gray-600">Active • Last triggered 2 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded-lg text-sm font-medium">3 new</span>
+                        <button class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                    <div class="flex items-center">
+                        <i class="fas fa-bell text-gray-400 mr-3"></i>
+                        <div>
+                            <div class="font-medium text-gray-900">MacBook Air M2 deals</div>
+                            <div class="text-sm text-gray-600">Active • Last triggered yesterday</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded-lg text-sm">No new deals</span>
+                        <button class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Deals -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-6">Recent Deals</h3>
+            
+            <div class="grid gap-4">
+                <div class="flex items-center space-x-4 p-4 hover:bg-gray-50 rounded-xl transition-colors">
+                    <img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=80&h=80&fit=crop" 
+                         alt="iPhone" class="w-16 h-16 rounded-lg object-cover">
+                    <div class="flex-1">
+                        <div class="font-medium text-gray-900">iPhone 15 Pro 128GB</div>
+                        <div class="text-sm text-gray-600">Brand new, unlocked</div>
+                        <div class="flex items-center space-x-2 mt-1">
+                            <span class="text-lg font-bold text-green-600">₹78,999</span>
+                            <span class="text-sm text-gray-500 line-through">₹134,900</span>
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm font-medium">41% off</span>
+                        </div>
+                    </div>
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        View Deal
+                    </button>
+                </div>
+
+                <div class="flex items-center space-x-4 p-4 hover:bg-gray-50 rounded-xl transition-colors">
+                    <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=80&h=80&fit=crop" 
+                         alt="MacBook" class="w-16 h-16 rounded-lg object-cover">
+                    <div class="flex-1">
+                        <div class="font-medium text-gray-900">MacBook Air M2 256GB</div>
+                        <div class="text-sm text-gray-600">Space Gray, excellent condition</div>
+                        <div class="flex items-center space-x-2 mt-1">
+                            <span class="text-lg font-bold text-green-600">₹89,500</span>
+                            <span class="text-sm text-gray-500 line-through">₹114,900</span>
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm font-medium">22% off</span>
+                        </div>
+                    </div>
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        View Deal
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white rounded-xl p-6 text-center border border-gray-200">
+                <div class="text-2xl font-bold text-blue-600 mb-1">12</div>
+                <div class="text-sm text-gray-600">Active Alerts</div>
+            </div>
+            <div class="bg-white rounded-xl p-6 text-center border border-gray-200">
+                <div class="text-2xl font-bold text-green-600 mb-1">₹45K</div>
+                <div class="text-sm text-gray-600">Total Saved</div>
+            </div>
+            <div class="bg-white rounded-xl p-6 text-center border border-gray-200">
+                <div class="text-2xl font-bold text-purple-600 mb-1">89</div>
+                <div class="text-sm text-gray-600">Deals Found</div>
+            </div>
+            <div class="bg-white rounded-xl p-6 text-center border border-gray-200">
+                <div class="text-2xl font-bold text-orange-600 mb-1">24</div>
+                <div class="text-sm text-gray-600">Days Active</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
