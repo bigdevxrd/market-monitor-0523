@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace Monitor - Find the Best Deals</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .glass { backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.8); }
+        .fade-in { animation: fadeIn 0.6s ease-out; }
+        .slide-up { animation: slideUp 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .deal-card:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Navigation -->
+    <nav class="glass border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <h1 class="text-xl font-semibold text-gray-900">Marketplace Monitor</h1>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="#search" class="text-blue-600 font-medium">Search</a>
+                        <a href="#saved-searches" class="text-gray-600 hover:text-gray-900 transition-colors">Saved Searches</a>
+                        <a href="#notifications" class="text-gray-600 hover:text-gray-900 transition-colors">Notifications</a>
+                        <a href="#analytics" class="text-gray-600 hover:text-gray-900 transition-colors">Analytics</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-600 hover:text-gray-900 relative">
+                        <i class="fas fa-bell text-lg"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
+                    </button>
+                    <div class="h-8 w-8 rounded-full bg-blue-600 text-white flex items-center justify-center">
+                        <span class="text-sm font-medium">JD</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto px-6 py-8">
+        
+        <!-- Hero Section -->
+        <div class="text-center mb-8 fade-in" id="search">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Find the best deals across marketplaces</h2>
+            <p class="text-xl text-gray-600 mb-8">AI-powered marketplace monitoring across Vinted, eBay, Facebook Marketplace, and more</p>
+        </div>
+
+        <!-- Search Form -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8 fade-in">
+            <div class="space-y-6">
+                
+                <!-- Main Search Bar -->
+                <div class="relative">
+                    <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input id="searchInput" type="text" placeholder="Search for vintage clothing, electronics, collectibles..." 
+                           class="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                </div>
+                
+                <!-- Quick Filters -->
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-sm font-medium text-gray-700 self-center">Quick filters:</span>
+                    <button class="px-3 py-1.5 text-sm font-medium bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 transition-colors">
+                        Vinted
+                    </button>
+                    <button class="px-3 py-1.5 text-sm font-medium bg-gray-100 text-gray-800 rounded-full hover:bg-gray-200 transition-colors">
+                        eBay
+                    </button>
+                    <button class="px-3 py-1.5 text-sm font-medium bg-gray-100 text-gray-800 rounded-full hover:bg-gray-200 transition-colors">
+                        Facebook Marketplace
+                    </button>
+                    <button class="px-3 py-1.5 text-sm font-medium bg-gray-100 text-gray-800 rounded-full hover:bg-gray-200 transition-colors">
+                        Depop
+                    </button>
+                    <button class="px-3 py-1.5 text-sm font-medium bg-gray-100 text-gray-800 rounded-full hover:bg-gray-200 transition-colors">
+                        Craigslist
+                    </button>
+                    <button class="ml-auto text-sm text-blue-600 hover:text-blue-800 font-medium">
+                        Advanced Filters
+                    </button>
+                </div>
+                
+                <!-- Advanced Filters -->
+                <div id="advancedFilters" class="border-t pt-6 space-y-4 slide-up">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Price Range</label>
+                            <div class="flex space-x-2">
+                                <input type="number" placeholder="Min" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                                <input type="number" placeholder="Max" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Condition</label>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="px-3 py-1.5 text-sm font-medium bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 transition-colors">
+                                    Any
+                                </button>
+                                <button class="px-3 py-1.5 text-sm font-medium bg-gray-100 text-gray-800 rounded-full hover:bg-gray-200 transition-colors">
+                                    New
+                                </button>
+                                <button class="px-3 py-1.5 text-sm font-medium bg-gray-100 text-gray-800 rounded-full hover:bg-gray-200 transition-colors">
+                                    Like New
+                                </button>
+                                <button class="px-3 py-1.5 text-sm font-medium bg-gray-100 text-gray-800 rounded-full hover:bg-gray-200 transition-colors">
+                                    Good
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                            <input type="text" placeholder="City, State or Zip" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Notification Types</label>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="px-3 py-1.5 text-sm font-medium bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 transition-colors">
+                                    Email
+                                </button>
+                                <button class="px-3 py-1.5 text-sm font-medium bg-gray-100 text-gray-800 rounded-full hover:bg-gray-200 transition-colors">
+                                    Push
+                                </button>
+                                <button class="px-3 py-1.5 text-sm font-medium bg-gray-100 text-gray-800 rounded-full hover:bg-gray-200 transition-colors">
+                                    SMS
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4 pt-2">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="saveSearch" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <label for="saveSearch" class="ml-2 text-sm text-gray-700">Save this search</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="notifyMe" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
+                            <label for="notifyMe" class="ml-2 text-sm text-gray-700">Notify me when new items are found</label>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end">
+                        <button class="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Saved Searches Section -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8 fade-in" id="saved-searches">
+            <h3 class="text-lg font-semibold text-gray-900 mb-6">Your Saved Searches</h3>
+            
+            <div class="space-y-4">
+                <!-- Saved Search Item -->
+                <div class="border border-gray-200 rounded-xl p-4 hover:border-blue-300 transition-colors">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <h4 class="font-medium text-gray-900 mb-1">Vintage Nike Sneakers</h4>
+                            <div class="flex flex-wrap gap-2 mb-2">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    Vinted
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    eBay
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    $50-$150
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    Good condition
+                                </span>
+                            </div>
+                            <div class="text-sm text-gray-500">
+                                Last run: 10 minutes ago · 3 new items found
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="p-2 text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-bell"></i>
+                            </button>
+                            <button class="p-2 text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+                            <button class="p-2 text-gray-400 hover:text-red-600">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Saved Search Item -->
+                <div class="border border-gray-200 rounded-xl p-4 hover:border-blue-300 transition-colors">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <h4 class="font-medium text-gray-900 mb-1">Mechanical Keyboard</h4>
+                            <div class="flex flex-wrap gap-2 mb-2">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    Facebook Marketplace
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    Craigslist
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    $75-$200
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    Any condition
+                                </span>
+                            </div>
+                            <div class="text-sm text-gray-500">
+                                Last run: 2 hours ago · 0 new items found
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="p-2 text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-bell"></i>
+                            </button>
+                            <button class="p-2 text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+                            <button class="p-2 text-gray-400 hover:text-red-600">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notifications Section -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8 fade-in" id="notifications">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-gray-900">Recent Notifications</h3>
+                <button class="text-sm text-blue-600 hover:text-blue-700 font-medium">Mark all as read</button>
+            </div>
+            
+            <div class="space-y-4">
+                <!-- Notification Item -->
+                <div class="flex items-start space-x-4 p-3 bg-blue-50 rounded-xl border border-blue-100">
+                    <div class="flex-shrink-0 w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-medium text-gray-900">New items found</h4>
+                            <span class="text-xs text-gray-500">5 min ago</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">Found 3 new items for your "Vintage Nike Sneakers" search</p>
+                        <div class="mt-2">
+                            <button class="text-sm text-blue-600 hover:text-blue-700 font-medium">View results</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Notification Item -->
+                <div class="flex items-start space-x-4 p-3 rounded-xl border border-gray-200">
+                    <div class="flex-shrink-0 w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-medium text-gray-900">Price drop alert</h4>
+                            <span class="text-xs text-gray-500">2 hours ago</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">The price for "Mechanical Keyboard" has dropped by 15%</p>
+                        <div class="mt-2">
+                            <button class="text-sm text-blue-600 hover:text-blue-700 font-medium">View item</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Analytics Dashboard -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8 fade-in" id="analytics">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-gray-900">Analytics Dashboard</h3>
+                <div class="flex space-x-2">
+                    <button class="px-3 py-1.5 text-sm font-medium bg-blue-100 text-blue-800 rounded-full">
+                        Week
+                    </button>
+                    <button class="px-3 py-1.5 text-sm font-medium bg-gray-100 text-gray-800 rounded-full hover:bg-gray-200 transition-colors">
+                        Month
+                    </button>
+                    <button class="px-3 py-1.5 text-sm font-medium bg-gray-100 text-gray-800 rounded-full hover:bg-gray-200 transition-colors">
+                        Year
+                    </button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                    <h4 class="text-sm font-medium text-gray-500 mb-1">Total Searches</h4>
+                    <div class="text-2xl font-bold text-gray-900">24</div>
+                    <div class="text-sm text-green-600 mt-1">↑ 12% from last week</div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                    <h4 class="text-sm font-medium text-gray-500 mb-1">Items Found</h4>
+                    <div class="text-2xl font-bold text-gray-900">156</div>
+                    <div class="text-sm text-green-600 mt-1">↑ 8% from last week</div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                    <h4 class="text-sm font-medium text-gray-500 mb-1">Avg. Price</h4>
+                    <div class="text-2xl font-bold text-gray-900">$87.50</div>
+                    <div class="text-sm text-red-600 mt-1">↓ 3% from last week</div>
+                </div>
+            </div>
+            
+            <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 h-64 flex items-center justify-center">
+                <div class="text-center text-gray-500">
+                    <i class="fas fa-chart-line text-4xl mb-2"></i>
+                    <p>Price trend chart would appear here</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-gray-100 border-t border-gray-200 py-8">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Marketplace Monitor</h3>
+                    <p class="text-sm text-gray-600">Find the best deals across multiple marketplaces</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-600 hover:text-gray-900">About</a>
+                    <a href="#" class="text-gray-600 hover:text-gray-900">Help</a>
+                    <a href="#" class="text-gray-600 hover:text-gray-900">Privacy</a>
+                    <a href="#" class="text-gray-600 hover:text-gray-900">Terms</a>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-200 text-center text-sm text-gray-600">
+                © 2025 Marketplace Monitor. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

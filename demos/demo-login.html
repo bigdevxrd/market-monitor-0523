@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - DealHawk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+    
+    <!-- Back to Home -->
+    <div class="absolute top-6 left-6">
+        <a href="demo.html" class="flex items-center text-gray-600 hover:text-gray-900">
+            <i class="fas fa-arrow-left mr-2"></i>Back to Search
+        </a>
+    </div>
+
+    <!-- Login Container -->
+    <div class="w-full max-w-md">
+        
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-900 mb-2">DealHawk</h1>
+            <p class="text-gray-600">Sign in to your account</p>
+        </div>
+
+        <!-- Login Form -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <form class="space-y-6">
+                <!-- Email -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input type="email" placeholder="Enter your email" 
+                           class="w-full px-4 py-3 bg-gray-50 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" placeholder="Enter your password" 
+                           class="w-full px-4 py-3 bg-gray-50 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Remember & Forgot -->
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="rounded text-blue-600 focus:ring-blue-500">
+                        <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                    </label>
+                    <a href="#" class="text-sm text-blue-600 hover:text-blue-700">Forgot password?</a>
+                </div>
+
+                <!-- Sign In Button -->
+                <button type="button" onclick="simulateLogin()" 
+                        class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors">
+                    Sign In
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="relative my-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-200"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                </div>
+            </div>
+
+            <!-- Social Login -->
+            <div class="grid grid-cols-2 gap-3">
+                <button class="flex items-center justify-center py-3 px-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                    <i class="fab fa-google text-gray-700 mr-2"></i>
+                    <span class="text-gray-700">Google</span>
+                </button>
+                <button class="flex items-center justify-center py-3 px-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                    <i class="fab fa-apple text-gray-700 mr-2"></i>
+                    <span class="text-gray-700">Apple</span>
+                </button>
+            </div>
+
+            <!-- Sign Up Link -->
+            <p class="text-center text-gray-600 text-sm mt-6">
+                Don't have an account? 
+                <button onclick="showSignUp()" class="text-blue-600 hover:text-blue-700 font-medium">Sign up</button>
+            </p>
+        </div>
+
+        <!-- Sign Up Form (Hidden) -->
+        <div id="signUpForm" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 hidden">
+            <div class="text-center mb-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-2">Create Account</h2>
+                <p class="text-gray-600">Join DealHawk today</p>
+            </div>
+            
+            <form class="space-y-6">
+                <!-- Name -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                    <input type="text" placeholder="Enter your name" 
+                           class="w-full px-4 py-3 bg-gray-50 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input type="email" placeholder="Enter your email" 
+                           class="w-full px-4 py-3 bg-gray-50 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" placeholder="Create a password" 
+                           class="w-full px-4 py-3 bg-gray-50 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Terms -->
+                <div class="flex items-start">
+                    <input type="checkbox" class="mt-1 rounded text-blue-600 focus:ring-blue-500">
+                    <span class="ml-2 text-sm text-gray-600">
+                        I agree to the <a href="#" class="text-blue-600 hover:text-blue-700">Terms</a> 
+                        and <a href="#" class="text-blue-600 hover:text-blue-700">Privacy Policy</a>
+                    </span>
+                </div>
+
+                <!-- Create Account Button -->
+                <button type="button" onclick="simulateSignUp()" 
+                        class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors">
+                    Create Account
+                </button>
+            </form>
+
+            <!-- Back to Sign In -->
+            <p class="text-center text-gray-600 text-sm mt-6">
+                Already have an account? 
+                <button onclick="showSignIn()" class="text-blue-600 hover:text-blue-700 font-medium">Sign in</button>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function showSignUp() {
+            document.querySelector('.bg-white:not(#signUpForm)').classList.add('hidden');
+            document.getElementById('signUpForm').classList.remove('hidden');
+        }
+
+        function showSignIn() {
+            document.getElementById('signUpForm').classList.add('hidden');
+            document.querySelector('.bg-white:not(#signUpForm)').classList.remove('hidden');
+        }
+
+        function simulateLogin() {
+            alert('Demo: Login successful!\n\nRedirecting to dashboard...');
+            setTimeout(() => window.location.href = 'demo-dashboard.html', 1000);
+        }
+
+        function simulateSignUp() {
+            alert('Demo: Account created successfully!\n\nPlease check your email for verification.');
+        }
+    </script>
+</body>
+</html>

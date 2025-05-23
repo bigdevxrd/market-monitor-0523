@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DealHawk - Find the Best Deals</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .glass { backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.8); }
+        .fade-in { animation: fadeIn 0.6s ease-out; }
+        .slide-up { animation: slideUp 0.4s ease-out; }
+        .pulse-ring { animation: pulse-ring 1.5s ease-out infinite; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse-ring { 0% { transform: scale(.33); } 80%, 100% { opacity: 0; } }
+        .deal-card:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        .price-badge { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Navigation -->
+    <nav class="glass border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <h1 class="text-xl font-semibold text-gray-900">DealHawk</h1>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="demo.html" class="text-blue-600 font-medium">Search</a>
+                        <a href="demo-dashboard.html" class="text-gray-600 hover:text-gray-900 transition-colors">Dashboard</a>
+                        <a href="demo-admin.html" class="text-gray-600 hover:text-gray-900 transition-colors">Admin</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button class="p-2 text-gray-600 hover:text-gray-900 transition-colors relative">
+                        <i class="fas fa-bell"></i>
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <a href="demo-login.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        Sign In
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto px-6 py-8">
+        
+        <!-- Hero Search Section -->
+        <div class="text-center mb-8 fade-in">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Find the best deals</h2>
+            <p class="text-xl text-gray-600 mb-8">AI-powered marketplace monitoring across eBay, Amazon, Flipkart, and more</p>
+        </div>
+
+        <!-- Search Section -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8 fade-in">
+            <div class="space-y-6">
+                
+                <!-- Main Search Bar -->
+                <div class="relative">
+                    <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input id="searchInput" type="text" placeholder="Search for electronics, fashion, home goods..." 
+                           class="w-full pl-12 pr-4 py-4 text-lg bg-gray-50 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                           onkeypress="handleSearchKeypress(event)" oninput="showSuggestions(this.value)">
+                    <button onclick="performSearch()" class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        Search
+                    </button>
+                    
+                    <!-- Search Suggestions -->
+                    <div id="suggestions" class="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-xl mt-2 shadow-lg hidden z-10">
+                        <div class="p-2"></div>
+                    </div>
+                </div>
+
+                <!-- Quick Categories -->
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="searchCategory('electronics')" class="category-btn px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
+                        <i class="fas fa-laptop mr-2"></i>Electronics
+                    </button>
+                    <button onclick="searchCategory('fashion')" class="category-btn px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                        <i class="fas fa-tshirt mr-2"></i>Fashion
+                    </button>
+                    <button onclick="searchCategory('home')" class="category-btn px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                        <i class="fas fa-home mr-2"></i>Home & Garden
+                    </button>
+                    <button onclick="searchCategory('collectibles')" class="category-btn px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                        <i class="fas fa-gem mr-2"></i>Collectibles
+                    </button>
+                    <button onclick="searchCategory('books')" class="category-btn px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                        <i class="fas fa-book mr-2"></i>Books
+                    </button>
+                </div>
+
+                <!-- Advanced Filters Toggle -->
+                <button onclick="toggleFilters()" class="text-blue-600 hover:text-blue-700 font-medium transition-colors">
+                    <i class="fas fa-sliders-h mr-2"></i>Advanced Filters
+                    <i id="filterArrow" class="fas fa-chevron-down ml-1 transition-transform"></i>
+                </button>
+
+                <!-- Advanced Filters -->
+                <div id="advancedFilters" class="hidden border-t pt-6 space-y-4 slide-up">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Price Range</label>
+                            <div class="flex space-x-2">
+                                <input id="minPrice" type="number" placeholder="Min ₹" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <input id="maxPrice" type="number" placeholder="Max ₹" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Condition</label>
+                            <select id="condition" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Any Condition</option>
+                                <option value="new">New</option>
+                                <option value="used">Used - Like New</option>
+                                <option value="used-good">Used - Good</option>
+                                <option value="refurbished">Refurbished</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Marketplace</label>
+                            <select id="marketplace" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">All Marketplaces</option>
+                                <option value="amazon">Amazon</option>
+                                <option value="flipkart">Flipkart</option>
+                                <option value="ebay">eBay</option>
+                                <option value="snapdeal">Snapdeal</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                            <select id="sortBy" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="relevance">Best Match</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="newest">Newest First</option>
+                                <option value="discount">Highest Discount</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="hidden text-center py-12">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            </div>
+            <p class="text-gray-600">Searching across marketplaces...</p>
+        </div>
+
+        <!-- Search Results -->
+        <div id="searchResults" class="hidden">
+            <!-- Results Header -->
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-900">Search Results</h3>
+                    <p id="resultsCount" class="text-gray-600"></p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="toggleView('grid')" id="gridView" class="p-2 bg-blue-600 text-white rounded-lg">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button onclick="toggleView('list')" id="listView" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Grid -->
+            <div id="resultsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"></div>
+            
+            <!-- Load More -->
+            <div class="text-center">
+                <button onclick="loadMoreResults()" class="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-200 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>Load More Results
+                </button>
+            </div>
+        </div>
+
+        <!-- No Search State - Recent & Trending -->
+        <div id="noSearchState">
+            <!-- Recent Searches -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8 fade-in">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Searches</h3>
+                <div class="space-y-3" id="recentSearches">
+                    <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer" onclick="searchFromHistory('iPhone 15 Pro')">
+                        <div class="flex items-center">
+                            <i class="fas fa-history text-gray-400 mr-3"></i>
+                            <span class="text-gray-700">iPhone 15 Pro</span>
+                        </div>
+                        <span class="text-sm text-gray-500">23 results</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer" onclick="searchFromHistory('MacBook Air M2')">
+                        <div class="flex items-center">
+                            <i class="fas fa-history text-gray-400 mr-3"></i>
+                            <span class="text-gray-700">MacBook Air M2</span>
+                        </div>
+                        <span class="text-sm text-gray-500">18 results</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer" onclick="searchFromHistory('Nike Air Jordan')">
+                        <div class="flex items-center">
+                            <i class="fas fa-history text-gray-400 mr-3"></i>
+                            <span class="text-gray-700">Nike Air Jordan</span>
+                        </div>
+                        <span class="text-sm text-gray-500">45 results</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trending Deals -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8 fade-in">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Trending Deals</h3>
+                    <span class="text-sm text-gray-500">Updated 5 minutes ago</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="deal-card bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200 transition-all cursor-pointer" onclick="viewDeal('trending-1')">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-medium text-blue-600 bg-blue-200 px-2 py-1 rounded-full">HOT DEAL</span>
+                            <span class="text-xs text-blue-600">64% OFF</span>
+                        </div>
+                        <h4 class="font-medium text-gray-900 mb-2">iPhone 15 Pro Max</h4>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-lg font-bold text-green-600">₹89,999</span>
+                            <span class="text-sm text-gray-500 line-through">₹134,900</span>
+                        </div>
+                    </div>
+                    
+                    <div class="deal-card bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl border border-green-200 transition-all cursor-pointer" onclick="viewDeal('trending-2')">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-medium text-green-600 bg-green-200 px-2 py-1 rounded-full">FLASH SALE</span>
+                            <span class="text-xs text-green-600">45% OFF</span>
+                        </div>
+                        <h4 class="font-medium text-gray-900 mb-2">Sony WH-1000XM5</h4>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-lg font-bold text-green-600">₹19,999</span>
+                            <span class="text-sm text-gray-500 line-through">₹34,990</span>
+                        </div>
+                    </div>
+                    
+                    <div class="deal-card bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl border border-purple-200 transition-all cursor-pointer" onclick="viewDeal('trending-3')">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-medium text-purple-600 bg-purple-200 px-2 py-1 rounded-full">LIMITED</span>
+                            <span class="text-xs text-purple-600">30% OFF</span>
+                        </div>
+                        <h4 class="font-medium text-gray-900 mb-2">iPad Air M2</h4>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-lg font-bold text-green-600">₹44,999</span>
+                            <span class="text-sm text-gray-500 line-through">₹59,900</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 fade-in">
+                <div class="bg-white rounded-xl p-6 text-center border border-gray-200">
+                    <div class="text-2xl font-bold text-blue-600 mb-1">2.4M</div>
+                    <div class="text-sm text-gray-600">Products Tracked</div>
+                </div>
+                <div class="bg-white rounded-xl p-6 text-center border border-gray-200">
+                    <div class="text-2xl font-bold text-green-600 mb-1">₹89K</div>
+                    <div class="text-sm text-gray-600">Avg Savings</div>
+                </div>
+                <div class="bg-white rounded-xl p-6 text-center border border-gray-200">
+                    <div class="text-2xl font-bold text-purple-600 mb-1">156</div>
+                    <div class="text-sm text-gray-600">New Deals Today</div>
+                </div>
+                <div class="bg-white rounded-xl p-6 text-center border border-gray-200">
+                    <div class="text-2xl font-bold text-orange-600 mb-1">24/7</div>
+                    <div class="text-sm text-gray-600">Monitoring</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Demo data for search results
+        const demoProducts = [
+            {
+                id: 1,
+                name: "iPhone 15 Pro 128GB Natural Titanium",
+                price: 78999,
+                originalPrice: 134900,
+                discount: 42,
+                condition: "new",
+                marketplace: "amazon",
+                image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=300&h=300&fit=crop",
+                rating: 4.8,
+                reviews: 1247,
+                seller: "Apple Store Official"
+            },
+            {
+                id: 2,
+                name: "MacBook Air M2 13-inch Space Gray 256GB",
+                price: 89500,
+                originalPrice: 114900,
+                discount: 22,
+                condition: "new",
+                marketplace: "flipkart",
+                image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&h=300&fit=crop",
+                rating: 4.9,
+                reviews: 892,
+                seller: "Apple Authorized"
+            },
+            {
+                id: 3,
+                name: "Sony WH-1000XM5 Noise Canceling Headphones",
+                price: 19999,
+                originalPrice: 34990,
+                discount: 43,
+                condition: "new",
+                marketplace: "amazon",
+                image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300&h=300&fit=crop",
+                rating: 4.7,
+                reviews: 2341,
+                seller: "Sony Official Store"
+            },
+            {
+                id: 4,
+                name: "iPad Air M2 11-inch Wi-Fi 128GB Blue",
+                price: 44999,
+                originalPrice: 59900,
+                discount: 25,
+                condition: "new",
+                marketplace: "flipkart",
+                image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=300&h=300&fit=crop",
+                rating: 4.6,
+                reviews: 567,
+                seller: "RetailNet"
+            },
+            {
+                id: 5,
+                name: "Samsung Galaxy S24 Ultra 256GB Titanium Gray",
+                price: 94999,
+                originalPrice: 129999,
+                discount: 27,
+                condition: "new",
+                marketplace: "amazon",
+                image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=300&h=300&fit=crop",
+                rating: 4.5,
+                reviews: 1834,
+                seller: "Samsung Store"
+            },
+            {
+                id: 6,
+                name: "AirPods Pro 2nd Generation with MagSafe Case",
+                price: 18990,
+                originalPrice: 24900,
+                discount: 24,
+                condition: "new",
+                marketplace: "ebay",
+                image: "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=300&h=300&fit=crop",
+                rating: 4.8,
+                reviews: 3421,
+                seller: "TechHub India"
+            }
+        ];
+
+        const searchSuggestions = [
+            "iPhone 15 Pro", "MacBook Air M2", "iPad Air", "AirPods Pro", "Samsung Galaxy S24",
+            "Sony WH-1000XM5", "Dell XPS 13", "HP Pavilion", "Lenovo ThinkPad", "OnePlus 12",
+            "Nintendo Switch", "PlayStation 5", "Xbox Series X", "Apple Watch Series 9"
+        ];
+
+        let currentResults = [];
+        let isSearching = false;
+
+        // Search functionality
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) {
+                alert('Please enter a search term');
+                return;
+            }
+
+            showLoading();
+            
+            // Add to recent searches
+            addToRecentSearches(query);
+            
+            // Simulate search delay
+            setTimeout(() => {
+                currentResults = filterProducts(query);
+                displayResults(currentResults);
+                hideLoading();
+            }, 1500);
+        }
+
+        function searchCategory(category) {
+            document.getElementById('searchInput').value = category;
+            performSearch();
+            
+            // Update active category button
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.className = 'category-btn px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors';
+            });
+            event.target.className = 'category-btn px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors';
+        }
+
+        function searchFromHistory(query) {
+            document.getElementById('searchInput').value = query;
+            performSearch();
+        }
+
+        function filterProducts(query) {
+            // Simple search simulation - in real app this would be API call
+            return demoProducts.filter(product => 
+                product.name.toLowerCase().includes(query.toLowerCase())
+            ).slice(0, 6); // Limit to 6 results for demo
+        }
+
+        function displayResults(products) {
+            const resultsGrid = document.getElementById('resultsGrid');
+            const resultsCount = document.getElementById('resultsCount');
+            
+            document.getElementById('noSearchState').style.display = 'none';
+            document.getElementById('searchResults').style.display = 'block';
+            
+            resultsCount.textContent = `Found ${products.length} deals in 0.${Math.floor(Math.random() * 9) + 1} seconds`;
+            
+            resultsGrid.innerHTML = products.map(product => `
+                <div class="deal-card bg-white rounded-xl border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer" onclick="viewDeal('${product.id}')">
+                    <div class="relative">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
+                        <div class="absolute top-3 left-3">
+                            <span class="price-badge text-white text-xs font-bold px-2 py-1 rounded-full">
+                                ${product.discount}% OFF
+                            </span>
+                        </div>
+                        <div class="absolute top-3 right-3">
+                            <span class="bg-white text-gray-600 text-xs px-2 py-1 rounded-full font-medium">
+                                ${product.marketplace.toUpperCase()}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-medium text-gray-900 mb-2 line-clamp-2">${product.name}</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex items-center text-yellow-400 text-sm mr-2">
+                                ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
+                            </div>
+                            <span class="text-xs text-gray-500">(${product.reviews})</span>
+                        </div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <span class="text-xl font-bold text-green-600">₹${product.price.toLocaleString()}</span>
+                                <span class="text-sm text-gray-500 line-through ml-2">₹${product.originalPrice.toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-600">${product.seller}</span>
+                            <button onclick="createAlert(event, '${product.name}')" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                                <i class="fas fa-bell mr-1"></i>Alert
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showLoading() {
+            isSearching = true;
+            document.getElementById('noSearchState').style.display = 'none';
+            document.getElementById('searchResults').style.display = 'none';
+            document.getElementById('loadingState').style.display = 'block';
+        }
+
+        function hideLoading() {
+            isSearching = false;
+            document.getElementById('loadingState').style.display = 'none';
+        }
+
+        function toggleFilters() {
+            const filters = document.getElementById('advancedFilters');
+            const arrow = document.getElementById('filterArrow');
+            
+            if (filters.classList.contains('hidden')) {
+                filters.classList.remove('hidden');
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                filters.classList.add('hidden');
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function showSuggestions(query) {
+            const suggestions = document.getElementById('suggestions');
+            const suggestionsContent = suggestions.querySelector('div');
+            
+            if (query.length < 2) {
+                suggestions.classList.add('hidden');
+                return;
+            }
+            
+            const matches = searchSuggestions.filter(s => 
+                s.toLowerCase().includes(query.toLowerCase())
+            ).slice(0, 5);
+            
+            if (matches.length > 0) {
+                suggestionsContent.innerHTML = matches.map(match => `
+                    <div class="px-4 py-2 hover:bg-gray-50 cursor-pointer transition-colors" 
+                         onclick="selectSuggestion('${match}')">
+                        <i class="fas fa-search text-gray-400 mr-3"></i>${match}
+                    </div>
+                `).join('');
+                suggestions.classList.remove('hidden');
+            } else {
+                suggestions.classList.add('hidden');
+            }
+        }
+
+        function selectSuggestion(suggestion) {
+            document.getElementById('searchInput').value = suggestion;
+            document.getElementById('suggestions').classList.add('hidden');
+            performSearch();
+        }
+
+        function handleSearchKeypress(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        }
+
+        function addToRecentSearches(query) {
+            // In real app, this would save to localStorage or database
+            console.log(`Added "${query}" to recent searches`);
+        }
+
+        function viewDeal(productId) {
+            alert(`Demo: Opening deal details for product ${productId}\n\nIn a real app, this would:\n• Show detailed product information\n• Display price history\n• Show seller details\n• Provide purchase links`);
+        }
+
+        function createAlert(event, productName) {
+            event.stopPropagation();
+            alert(`Demo: Price alert created for "${productName}"\n\nYou'll be notified when:\n• Price drops below current price\n• New deals become available\n• Stock becomes available`);
+        }
+
+        function toggleView(view) {
+            const gridBtn = document.getElementById('gridView');
+            const listBtn = document.getElementById('listView');
+            
+            if (view === 'grid') {
+                gridBtn.className = 'p-2 bg-blue-600 text-white rounded-lg';
+                listBtn.className = 'p-2 text-gray-600 hover:bg-gray-100 rounded-lg';
+            } else {
+                listBtn.className = 'p-2 bg-blue-600 text-white rounded-lg';
+                gridBtn.className = 'p-2 text-gray-600 hover:bg-gray-100 rounded-lg';
+            }
+        }
+
+        function loadMoreResults() {
+            alert('Demo: Loading more results...\n\nIn a real app, this would load the next page of search results');
+        }
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(event) {
+            const suggestions = document.getElementById('suggestions');
+            const searchInput = document.getElementById('searchInput');
+            
+            if (!suggestions.contains(event.target) && event.target !== searchInput) {
+                suggestions.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
