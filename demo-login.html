@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DealHawk - Login & Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .glass-effect { backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center p-4">
+    
+    <!-- Main Login Container -->
+    <div class="w-full max-w-md">
+        
+        <!-- Logo & Title -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full mb-4 shadow-lg">
+                <i class="fas fa-bullseye text-2xl text-purple-600"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-white mb-2">DealHawk</h1>
+            <p class="text-purple-100">AI-Powered Deal Discovery</p>
+        </div>
+
+        <!-- Login Form Card -->
+        <div class="glass-effect rounded-2xl p-8 shadow-2xl border border-white/20" id="loginForm">
+            <h2 class="text-2xl font-bold text-white mb-6 text-center">Welcome Back</h2>
+            
+            <form class="space-y-6">
+                <!-- Email Field -->
+                <div>
+                    <label class="block text-purple-100 text-sm font-medium mb-2">Email Address</label>
+                    <div class="relative">
+                        <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-300"></i>
+                        <input type="email" placeholder="Enter your email" 
+                               class="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent">
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div>
+                    <label class="block text-purple-100 text-sm font-medium mb-2">Password</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-300"></i>
+                        <input type="password" placeholder="Enter your password" 
+                               class="w-full pl-10 pr-12 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent">
+                        <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-purple-300 hover:text-white">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remember & Forgot -->
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="rounded border-white/20 bg-white/10 text-purple-600 focus:ring-purple-400">
+                        <span class="ml-2 text-sm text-purple-100">Remember me</span>
+                    </label>
+                    <a href="#" class="text-sm text-purple-200 hover:text-white">Forgot password?</a>
+                </div>
+
+                <!-- Login Button -->
+                <button type="button" onclick="simulateLogin()" 
+                        class="w-full bg-white text-purple-600 font-semibold py-3 rounded-lg hover:bg-purple-50 transition-colors shadow-lg">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Sign In
+                </button>
+            </form>
+
+            <!-- Social Login -->
+            <div class="mt-6">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-white/20"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-transparent text-purple-100">Or continue with</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3 mt-4">
+                    <button class="flex items-center justify-center py-2 px-4 bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 transition-colors">
+                        <i class="fab fa-google text-white mr-2"></i>
+                        <span class="text-white text-sm">Google</span>
+                    </button>
+                    <button class="flex items-center justify-center py-2 px-4 bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 transition-colors">
+                        <i class="fab fa-github text-white mr-2"></i>
+                        <span class="text-white text-sm">GitHub</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Register Link -->
+            <p class="text-center text-purple-100 text-sm mt-6">
+                Don't have an account? 
+                <button onclick="showRegister()" class="text-white font-medium hover:underline">Sign up free</button>
+            </p>
+        </div>
+
+        <!-- Registration Form (Hidden by default) -->
+        <div class="glass-effect rounded-2xl p-8 shadow-2xl border border-white/20 hidden" id="registerForm">
+            <h2 class="text-2xl font-bold text-white mb-6 text-center">Create Account</h2>
+            
+            <form class="space-y-6">
+                <!-- Name Field -->
+                <div>
+                    <label class="block text-purple-100 text-sm font-medium mb-2">Full Name</label>
+                    <div class="relative">
+                        <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-300"></i>
+                        <input type="text" placeholder="Enter your full name" 
+                               class="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                    </div>
+                </div>
+
+                <!-- Email Field -->
+                <div>
+                    <label class="block text-purple-100 text-sm font-medium mb-2">Email Address</label>
+                    <div class="relative">
+                        <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-300"></i>
+                        <input type="email" placeholder="Enter your email" 
+                               class="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div>
+                    <label class="block text-purple-100 text-sm font-medium mb-2">Password</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-300"></i>
+                        <input type="password" placeholder="Create a password" 
+                               class="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                    </div>
+                </div>
+
+                <!-- Terms Checkbox -->
+                <div class="flex items-start">
+                    <input type="checkbox" class="mt-1 rounded border-white/20 bg-white/10 text-purple-600 focus:ring-purple-400">
+                    <span class="ml-2 text-sm text-purple-100">
+                        I agree to the <a href="#" class="text-white hover:underline">Terms of Service</a> 
+                        and <a href="#" class="text-white hover:underline">Privacy Policy</a>
+                    </span>
+                </div>
+
+                <!-- Register Button -->
+                <button type="button" onclick="simulateRegister()" 
+                        class="w-full bg-white text-purple-600 font-semibold py-3 rounded-lg hover:bg-purple-50 transition-colors shadow-lg">
+                    <i class="fas fa-user-plus mr-2"></i>Create Account
+                </button>
+            </form>
+
+            <!-- Back to Login -->
+            <p class="text-center text-purple-100 text-sm mt-6">
+                Already have an account? 
+                <button onclick="showLogin()" class="text-white font-medium hover:underline">Sign in</button>
+            </p>
+        </div>
+
+        <!-- Demo Navigation -->
+        <div class="text-center mt-8">
+            <p class="text-purple-100 text-sm mb-4">Demo Navigation:</p>
+            <div class="flex flex-wrap gap-2 justify-center">
+                <a href="demo.html" class="px-3 py-1 bg-white/20 text-white text-sm rounded-full hover:bg-white/30 transition-colors">
+                    <i class="fas fa-chart-line mr-1"></i>Dashboard
+                </a>
+                <a href="demo-new-search.html" class="px-3 py-1 bg-white/20 text-white text-sm rounded-full hover:bg-white/30 transition-colors">
+                    <i class="fas fa-search mr-1"></i>Search
+                </a>
+                <span class="px-3 py-1 bg-purple-600 text-white text-sm rounded-full">
+                    <i class="fas fa-sign-in-alt mr-1"></i>Login
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showRegister() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.remove('hidden');
+        }
+
+        function showLogin() {
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+        }
+
+        function simulateLogin() {
+            // Simulate login process
+            const button = event.target;
+            const originalText = button.innerHTML;
+            
+            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Signing in...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                alert('Demo: Login successful! In a real app, you would be redirected to the dashboard.');
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 2000);
+        }
+
+        function simulateRegister() {
+            // Simulate registration process
+            const button = event.target;
+            const originalText = button.innerHTML;
+            
+            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Creating account...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                alert('Demo: Account created successfully! In a real app, you would receive a verification email.');
+                button.innerHTML = originalText;
+                button.disabled = false;
+                showLogin();
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
