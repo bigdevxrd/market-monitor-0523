@@ -29,6 +29,7 @@ export interface SearchQuery {
   saveSearch?: boolean;
   searchName?: string;
   notifyWhenFound?: boolean;
+  condition?: string[];
 }
 
 export interface SearchResult {

@@ -146,7 +146,7 @@ export default function NotificationsPage() {
     };
     
     fetchNotifications();
-  }, [user?.id]);
+  }, [user?.id, user]);
 
   return (
     <div className="container py-10">

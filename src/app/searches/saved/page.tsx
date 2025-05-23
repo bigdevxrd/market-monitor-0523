@@ -39,7 +39,7 @@ export default function SavedSearchesPage() {
     };
     
     loadSavedSearches();
-  }, [user]);
+  }, [user, searchTemplateService]);
   
   // Run a saved search
   const runSearch = async (searchId: string) => {
@@ -60,7 +60,7 @@ export default function SavedSearchesPage() {
     
     setIsDeleting(searchId);
     try {
-      await searchTemplateService.deleteSavedSearch(searchId);
+      await searchTemplateService.deleteSearch(searchId);
       setSavedSearches(savedSearches.filter(search => search.id !== searchId));
       toast.success('Search deleted successfully');
     } catch (error) {
@@ -74,7 +74,7 @@ export default function SavedSearchesPage() {
   // Toggle notification for a search
   const toggleNotification = async (searchId: string, enabled: boolean) => {
     try {
-      await searchTemplateService.updateSavedSearch(searchId, { notification_enabled: enabled });
+      await searchTemplateService.updateSearch(searchId, { notification_enabled: enabled });
       
       // Update local state
       setSavedSearches(savedSearches.map(search => 
@@ -312,7 +312,8 @@ export default function SavedSearchesPage() {
                       <h4 className="text-sm font-medium text-neutral-500 mb-1">Condition</h4>
                       <div className="flex flex-wrap gap-1">
                         {(Array.isArray(search.query.condition) ? search.query.condition : [search.query.condition])
-                          .map((condition, index) => (
+                          .filter((condition): condition is string => typeof condition === 'string')
+                          .map((condition: string, index: number) => (
                             <Badge key={index} variant="outline" className="capitalize">
                               {condition}
                             </Badge>
@@ -323,7 +324,7 @@ export default function SavedSearchesPage() {
                   
                   <div>
                     <h4 className="text-sm font-medium text-neutral-500 mb-1">Last Run</h4>
-                    <p className="text-neutral-900">{formatDate(search.last_run)}</p>
+                    <p className="text-neutral-900">{search.last_run ? formatDate(search.last_run) : 'Never'}</p>
                   </div>
                 </div>
               </CardContent>
@@ -332,7 +333,7 @@ export default function SavedSearchesPage() {
                 <div className="grid grid-cols-2 gap-3 w-full">
                   <Button
                     variant="primary"
-                    loading={isRunning === search.id}
+                    isLoading={isRunning === search.id}
                     onClick={() => runSearch(search.id)}
                   >
                     <svg

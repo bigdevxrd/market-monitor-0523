@@ -13,10 +13,12 @@ interface SearchFormData {
   keywords: string;
   minPrice?: number;
   maxPrice?: number;
-  condition?: string;
+  condition?: string[];
   location?: string;
   marketplaces: string[];
   notificationTypes: string[];
+  saveSearch?: boolean;
+  notifyWhenFound?: boolean;
 }
 
 export default function SearchForm({ 
@@ -34,6 +36,10 @@ export default function SearchForm({
     defaultValues?.notificationTypes || ['email']
   );
 
+  const [selectedConditions, setSelectedConditions] = useState<string[]>(
+    defaultValues?.condition || ['any']
+  );
+
   const {
     register,
     handleSubmit,
@@ -45,10 +51,12 @@ export default function SearchForm({
       keywords: defaultValues?.keywords || '',
       minPrice: defaultValues?.minPrice,
       maxPrice: defaultValues?.maxPrice,
-      condition: defaultValues?.condition || 'any',
+      condition: defaultValues?.condition || ['any'],
       location: defaultValues?.location || '',
       marketplaces: defaultValues?.marketplaces || ['depop', 'facebook', 'ebay'],
       notificationTypes: defaultValues?.notificationTypes || ['email'],
+      saveSearch: defaultValues?.saveSearch !== undefined ? defaultValues.saveSearch : true,
+      notifyWhenFound: defaultValues?.notifyWhenFound !== undefined ? defaultValues.notifyWhenFound : true,
     },
   });
 
@@ -58,6 +66,7 @@ export default function SearchForm({
     try {
       data.marketplaces = selectedMarketplaces;
       data.notificationTypes = selectedNotifications;
+      data.condition = selectedConditions;
       await onSubmit(data);
       toast.success('Search saved successfully!');
     } catch (error) {
@@ -84,6 +93,30 @@ export default function SearchForm({
         return prev.filter((item) => item !== type);
       } else {
         return [...prev, type];
+      }
+    });
+  };
+
+  const toggleCondition = (condition: string) => {
+    // If 'any' is selected, clear other selections
+    if (condition === 'any') {
+      setSelectedConditions(['any']);
+      return;
+    }
+    
+    setSelectedConditions((prev) => {
+      // Remove 'any' if it's in the array and we're selecting something else
+      let newConditions = prev.filter(item => item !== 'any');
+      
+      if (newConditions.includes(condition)) {
+        newConditions = newConditions.filter((item) => item !== condition);
+        // If no conditions left, default back to 'any'
+        if (newConditions.length === 0) {
+          return ['any'];
+        }
+        return newConditions;
+      } else {
+        return [...newConditions, condition];
       }
     });
   };
@@ -152,24 +185,48 @@ export default function SearchForm({
               />
             </div>
 
-            <Controller
-              name="condition"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  label="Condition"
-                  options={[
-                    { value: 'any', label: 'Any' },
-                    { value: 'new', label: 'New' },
-                    { value: 'like_new', label: 'Like New' },
-                    { value: 'good', label: 'Good' },
-                    { value: 'fair', label: 'Fair' },
-                    { value: 'poor', label: 'Poor' },
-                  ]}
-                  {...field}
-                />
-              )}
-            />
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-neutral-700">
+                Condition
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { id: 'any', name: 'Any' },
+                  { id: 'new', name: 'New' },
+                  { id: 'like_new', name: 'Like New' },
+                  { id: 'good', name: 'Good' },
+                  { id: 'fair', name: 'Fair' },
+                  { id: 'poor', name: 'Poor' },
+                ].map((conditionOption) => (
+                  <button
+                    key={conditionOption.id}
+                    type="button"
+                    className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium transition-colors ${
+                      selectedConditions.includes(conditionOption.id)
+                        ? 'bg-primary-100 text-primary-800'
+                        : 'bg-neutral-100 text-neutral-800 hover:bg-neutral-200'
+                    }`}
+                    onClick={() => toggleCondition(conditionOption.id)}
+                  >
+                    {selectedConditions.includes(conditionOption.id) && (
+                      <svg
+                        className="-ml-0.5 mr-1.5 h-4 w-4"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    )}
+                    {conditionOption.name}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             <Input
               label="Location (optional)"
@@ -265,6 +322,32 @@ export default function SearchForm({
               {selectedNotifications.length === 0 && (
                 <p className="mt-1 text-sm text-error-500">Select at least one notification type</p>
               )}
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <input
+                  id="saveSearch"
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
+                  {...register('saveSearch')}
+                />
+                <label htmlFor="saveSearch" className="text-sm font-medium text-neutral-700">
+                  Save this search for future use
+                </label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <input
+                  id="notifyWhenFound"
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
+                  {...register('notifyWhenFound')}
+                />
+                <label htmlFor="notifyWhenFound" className="text-sm font-medium text-neutral-700">
+                  Notify me when new items matching this search are found
+                </label>
+              </div>
             </div>
           </div>
         </CardContent>

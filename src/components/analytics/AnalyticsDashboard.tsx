@@ -5,7 +5,7 @@ import { AnalyticsService } from '@/lib/api/analytics-service';
 import { useAuth } from '@/lib/auth-context';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
+import Select from '@/components/ui/Select';
 import { LineChart } from '@/components/ui/charts/LineChart';
 import { BarChart } from '@/components/ui/charts/BarChart';
 import { PieChart } from '@/components/ui/charts/PieChart';
@@ -43,7 +43,7 @@ export function AnalyticsDashboard() {
     };
     
     fetchAnalytics();
-  }, [user?.id]);
+  }, [user?.id, user, analyticsService]);
   
   // Fetch price trends when search query or time range changes
   useEffect(() => {
@@ -59,7 +59,7 @@ export function AnalyticsDashboard() {
     };
     
     fetchPriceTrends();
-  }, [searchQuery, timeRange]);
+  }, [searchQuery, timeRange, analyticsService]);
   
   // Prepare data for charts
   const prepareLineChartData = () => {
@@ -135,38 +135,53 @@ export function AnalyticsDashboard() {
   
   return (
     <div className="space-y-6">
-      <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
+      <Tabs defaultValue="overview" className="w-full">
         <div className="flex justify-between items-center">
           <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="price-trends">Price Trends</TabsTrigger>
-            <TabsTrigger value="search-history">Search History</TabsTrigger>
+            <button
+              className={`px-3 py-1.5 text-sm font-medium ${activeTab === 'overview' ? 'bg-primary-100 text-primary-800' : 'text-neutral-600'}`}
+              onClick={() => setActiveTab('overview')}
+            >
+              Overview
+            </button>
+            <button
+              className={`px-3 py-1.5 text-sm font-medium ${activeTab === 'price-trends' ? 'bg-primary-100 text-primary-800' : 'text-neutral-600'}`}
+              onClick={() => setActiveTab('price-trends')}
+            >
+              Price Trends
+            </button>
+            <button
+              className={`px-3 py-1.5 text-sm font-medium ${activeTab === 'search-history' ? 'bg-primary-100 text-primary-800' : 'text-neutral-600'}`}
+              onClick={() => setActiveTab('search-history')}
+            >
+              Search History
+            </button>
           </TabsList>
           
           {activeTab === 'price-trends' && (
             <div className="flex items-center gap-4">
-              <Select value={searchQuery} onValueChange={setSearchQuery}>
-                <SelectTrigger className="w-[240px]">
-                  <SelectValue placeholder="Search query" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="vintage leather jacket">Vintage Leather Jacket</SelectItem>
-                  <SelectItem value="mechanical keyboard">Mechanical Keyboard</SelectItem>
-                  <SelectItem value="levi's 501">Levi's 501</SelectItem>
-                  <SelectItem value="polaroid camera">Polaroid Camera</SelectItem>
-                </SelectContent>
-              </Select>
+              <Select
+                options={[
+                  { value: 'vintage leather jacket', label: 'Vintage Leather Jacket' },
+                  { value: 'mechanical keyboard', label: 'Mechanical Keyboard' },
+                  { value: "levi's 501", label: "Levi's 501" },
+                  { value: 'polaroid camera', label: 'Polaroid Camera' }
+                ]}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-[240px]"
+              />
               
-              <Select value={timeRange} onValueChange={(value: any) => setTimeRange(value)}>
-                <SelectTrigger className="w-[120px]">
-                  <SelectValue placeholder="Time range" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="week">Week</SelectItem>
-                  <SelectItem value="month">Month</SelectItem>
-                  <SelectItem value="year">Year</SelectItem>
-                </SelectContent>
-              </Select>
+              <Select
+                options={[
+                  { value: 'week', label: 'Week' },
+                  { value: 'month', label: 'Month' },
+                  { value: 'year', label: 'Year' }
+                ]}
+                value={timeRange}
+                onChange={(e) => setTimeRange(e.target.value as 'week' | 'month' | 'year')}
+                className="w-[120px]"
+              />
             </div>
           )}
         </div>
@@ -244,7 +259,7 @@ export function AnalyticsDashboard() {
         <TabsContent value="price-trends" className="space-y-6 mt-6">
           <Card>
             <CardHeader>
-              <CardTitle>Price Trends for "{searchQuery}"</CardTitle>
+              <CardTitle>Price Trends for &quot;{searchQuery}&quot;</CardTitle>
               <CardDescription>
                 Track how prices have changed over the {timeRange}
               </CardDescription>

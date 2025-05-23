@@ -70,7 +70,7 @@ export default function SettingsPage() {
     };
     
     loadUserProfile();
-  }, [user, setValue]);
+  }, [user, setValue, notificationService, userService]);
   
   const onSubmit = async (data: ProfileFormData) => {
     if (!user) return;
@@ -214,7 +214,7 @@ export default function SettingsPage() {
               </div>
             </CardContent>
             <CardFooter className="flex justify-end">
-              <Button type="submit" loading={isSaving}>
+              <Button type="submit" isLoading={isSaving}>
                 Save Changes
               </Button>
             </CardFooter>
@@ -275,7 +275,8 @@ export default function SettingsPage() {
                 </div>
                 <Button
                   type="button"
-                  variant="destructive"
+                  variant="primary"
+                  className="bg-red-600 hover:bg-red-700"
                   onClick={() => {
                     // Implement account deletion confirmation
                     toast.error('Account deletion coming soon!');

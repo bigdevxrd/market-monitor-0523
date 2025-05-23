@@ -73,7 +73,7 @@ export function NotificationCenter() {
     if (isOpen || !notifications.length) {
       fetchNotifications();
     }
-  }, [isOpen, user?.id]);
+  }, [isOpen, user?.id, fetchNotifications, notifications.length]);
   
   // Poll for new notifications periodically when logged in
   useEffect(() => {
@@ -82,7 +82,7 @@ export function NotificationCenter() {
     const interval = setInterval(fetchNotifications, 60000); // Check every minute
     
     return () => clearInterval(interval);
-  }, [user?.id]);
+  }, [user?.id, user, fetchNotifications]);
   
   // Render the notification icon with badge
   return (
